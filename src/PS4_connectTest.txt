@@ -1,0 +1,33 @@
+#include <PS4Controller.h>
+
+void setup() {
+  Serial.begin(115200);
+  //<summary>
+  //
+  // EC:E3:34:D2:AB:6A  ESP32 (Oe)
+  // 78:42:1c:2d:10:c6  PS4 (Yamanaka)
+  // ac:49:db:92:bb:d1  PS4 (Oe)
+  //
+  //<summary>
+
+  PS4.begin("EC:E3:34:D2:AB:6A");
+  Serial.println("Ready.");
+}
+
+void loop() {
+  // Below has all accessible outputs from the controller
+  if (PS4.isConnected()) 
+    {
+        Serial.println("Connected!");
+
+        while(true)
+        {
+            Serial.printf("LX=%d LY=%d\n",
+                      PS4.LStickX(),
+                      PS4.LStickY());
+
+            delay(100);
+        }
+    }
+
+}

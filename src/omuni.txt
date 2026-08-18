@@ -1,0 +1,74 @@
+#include <Arduino.h>
+
+class Motor {
+    public:
+        Motor(const uint8_t _dir_pin, const uint8_t _pwm_pin, const uint8_t _pwm_channel);
+        ~Motor(void);
+        void attach(void);
+        void drive(const int power);
+    private:
+        uint8_t dir_pin;
+        uint8_t pwm_pin;
+        uint8_t pwm_channel;
+};
+
+Motor::Motor(const uint8_t _dir_pin, const uint8_t _pwm_pin, const uint8_t _pwm_channel) 
+: dir_pin(_dir_pin), pwm_pin(_pwm_pin), pwm_channel(_pwm_channel) {
+    ;
+}
+
+Motor::~Motor(void) {
+    pinMode(dir_pin, INPUT); 
+    pinMode(pwm_pin, OUTPUT);
+    ledcSetup(pwm_channel, 8000, 8);
+    ledcAttachPin(pwm_pin, pwm_channel);   
+}
+
+void Motor::attach(void) {
+    pinMode(dir_pin, OUTPUT);
+    pinMode(pwm_pin, OUTPUT);
+    ledcSetup(pwm_channel, 8000, 8);
+    ledcAttachPin(pwm_pin, pwm_channel);
+}
+
+void Motor::drive(int power) {
+  power = constrain(power, -255, 255); // 値を-255 ~ 255の間に収める
+  if (abs(power) <= 10) { // powerが少ない場合止める
+    digitalWrite(dir_pin, LOW);
+    ledcWrite(pwm_channel, 0);
+  }
+  else {
+    if (power >= 0) { // 正転
+      digitalWrite(dir_pin, LOW);
+    }
+    else {
+      digitalWrite(dir_pin, HIGH);
+    }
+    ledcWrite(pwm_channel, abs(power)); // powerの絶対値を出力
+  }
+}
+
+
+const uint8_t DIR_PIN = 13;
+const uint8_t PWM_PIN = 12;
+const uint8_t PWM_CHANNEL_0 = 0;
+
+Motor motor = Motor(DIR_PIN, PWM_PIN, PWM_CHANNEL_0);
+
+void setup(void) {
+    motor.attach();
+}
+
+void loop(void) {
+    motor.drive(127);
+    delay(3000);
+
+    motor.drive(0);
+    delay(3000);
+
+    motor.drive(-255);
+    delay(3000);
+
+    motor.drive(0);
+    delay(3000);
+}
