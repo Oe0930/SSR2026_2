@@ -175,6 +175,9 @@ void setup()
 
     input.connect();
 
+    lmSWs[0].setUp(LIMITSWITCH_PIN1);
+    lmSWs[1].setUp(LIMITSWITCH_PIN2);
+
     drive.setUp();
 
     etc[0].setUp(ETC_SERVO_PIN1, 90);
