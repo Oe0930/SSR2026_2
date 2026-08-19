@@ -19,6 +19,9 @@ float zR;
 bool isOpt;
 bool isOpt_pre = false;
 
+LimitSwitch lmSWs[2];
+bool isLimitPushed[2];
+
 // ========== Drive ==========
 DriveController drive;
 float slowGain = 0.6;
@@ -52,6 +55,9 @@ void updateInput()
     zR = min(input.ZR(), 1.0f);
     isOpt_pre = isOpt;
     isOpt = input.option();
+
+    isLimitPushed[0] = lmSWs[0].isPushed();
+    isLimitPushed[1] = lmSWs[1].isPushed();
 }
 
 float lastDebugTime = 0.0f;
@@ -74,6 +80,10 @@ void debug()
         if (isR) Serial.print("R1 ");
         if(isOpt) Serial.print("OPT ");
         if (isA || isB || isX || isY || isL || isR || isOpt) Serial.println();
+
+        if(isLimitPushed[0]) Serial.print("LMSW0 ");
+        if(isLimitPushed[1]) Serial.print("LMSW1 ");
+        if(isLimitPushed[0] || isLimitPushed[1]) Serial.println("");
 
         Serial.println("isAuto: " + String(isAuto));
     }

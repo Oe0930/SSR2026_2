@@ -2,6 +2,18 @@
 #include <PS4Controller.h>
 #include "Structs.hpp"
 
+class LimitSwitch
+{
+    private:
+        int pin;
+
+    public:
+        LimitSwitch();
+        void setUp(int pin);
+
+        bool isPushed();
+};
+
 class InputManager
 {
     private:

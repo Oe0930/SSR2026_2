@@ -1,6 +1,22 @@
 #include "InputManager.hpp"
 using IM = InputManager;
 
+LimitSwitch::LimitSwitch()
+{
+
+}
+
+void LimitSwitch::setUp(int _pin)
+{
+    pin = _pin;
+    pinMode(pin, INPUT_PULLUP);
+}
+
+bool LimitSwitch::isPushed()
+{
+    return digitalRead(pin) == LOW;
+}
+
 IM::InputManager()
 {
     
