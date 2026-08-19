@@ -15,6 +15,6 @@ const uint8_t LIMITSWITCH_PIN2 = 23;
 // 0 : 後輪 
 // 1 : 右前輪 
 // 2 : 左前輪 
-const uint8_t WHEEL_PWM_PINS[] = { 32, 25, 27 };
-const uint8_t WHEEL_DIR_PINS[] = { 33, 26, 14 };
+const uint8_t WHEEL_PWM_PINS[] = { 27, 32, 25 };
+const uint8_t WHEEL_DIR_PINS[] = { 14, 33, 26 };
 const uint8_t WHEEL_PWM_CHANNELS[] = { 3, 4, 5 };
