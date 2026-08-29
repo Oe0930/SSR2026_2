@@ -1,46 +1,21 @@
 #include "Move.hpp"
 
-// 入力を受け取って変数に格納
-void updateInput()
-{
-    lStick = input.LStick(true);
-    rStick = input.RStick(true);
-    isA = input.A();
-    isB = input.B();
-    isX = input.X();
-    isY = input.Y();
-    isL = input.L();
-    isR = input.R();
-    zL = min(input.ZL(), 1.0f);
-    zR = min(input.ZR(), 1.0f);
-    isOpt_pre = isOpt;
-    isOpt = input.option();
-}
+// ========== Drive ==========
+DriveController drive;
+float slowGain = 0.6f;
 
-float lastDebugTime = 0.0f;
-void debug()
-{
-    // 100msごとにデバッグ出力
-    if(millis() - lastDebugTime > 100)
-    {
-        lastDebugTime = millis();
+// ========== Arm ==========
+ServoController etc[2];
+ServoController back;
+RotationServoController lift;
 
-        Serial.printf("LX=%2f LY=%2f\n", lStick.x, lStick.y);
-        Serial.printf("RX=%2f RY=%2f\n", rStick.x, rStick.y);
-        Serial.printf("L= %d R= %d ZL=%.2f ZR=%.2f\n", isL, isR, zL, zR);
+const float servoSpeed = 0.001f;
+const float backServoSpeed = 0.01f;
+const float liftSpeed = 0.01f;
 
-        if (isA) Serial.print("A ");
-        if (isB) Serial.print("B ");
-        if (isX) Serial.print("X ");
-        if (isY) Serial.print("Y ");
-        if (isL) Serial.print("L1 ");
-        if (isR) Serial.print("R1 ");
-        if(isOpt) Serial.print("OPT ");
-        if (isA || isB || isX || isY || isL || isR || isOpt) Serial.println();
-
-        Serial.println("isAuto: " + String(isAuto));
-    }
-}
+// ========== main ==========
+bool isAuto = false;
+unsigned long autoRunStartTime = 0;
 
 // 自律走行停止処理
 void finishAuto()

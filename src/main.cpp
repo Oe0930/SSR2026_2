@@ -1,37 +1,7 @@
 #include <Arduino.h>
 #include "Move.hpp"
-
-// ========== input ==========
-InputManager input;
-Structs::VectorFloat lStick;
-Structs::VectorFloat rStick;
-bool isA;
-bool isB;
-bool isX;
-bool isY;
-bool isL;
-bool isR;
-float zL;
-float zR;
-bool isOpt;
-bool isOpt_pre = false;
-
-// ========== Drive ==========
-DriveController drive;
-float slowGain = 0.6f;
-
-// ========== Arm ==========
-ServoController etc[2];
-ServoController back;
-RotationServoController lift;
-
-const float servoSpeed = 0.001f;
-const float backServoSpeed = 0.01f;
-const float liftSpeed = 0.01f;
-
-// ========== main ==========
-bool isAuto = false;
-unsigned long autoRunStartTime = 0;
+#include "InputController.hpp"
+#include "DebugController.hpp"
 
 // セットアップ
 void setup() 
