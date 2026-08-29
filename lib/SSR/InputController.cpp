@@ -29,3 +29,23 @@ void updateInput()
     isOpt_pre = isOpt;
     isOpt = input.option();
 }
+
+void resetInput()
+{
+    lStick.x = 0;
+    lStick.y = 0;
+
+    rStick.x = 0;
+    rStick.y = 0;
+
+    isA = false;
+    isB = false;
+    isX = false;
+    isY = false;
+    isL = false;
+    isR = false;
+    zL = 0;
+    zR = 0;
+    isOpt = false;
+    isOpt_pre = false;
+}

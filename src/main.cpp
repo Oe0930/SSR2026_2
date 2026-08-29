@@ -32,5 +32,12 @@ void loop()
         }
 
         Serial.println("Contoroller is Disconnected...");
+
+        // 接続が切れたときはモーターを止める
+        resetInput();
+        drive.setSpeed(0,0);
+        drive.setSpeed(1,0);
+        drive.setSpeed(2,0);
+        lift.move(0);
     }
 }

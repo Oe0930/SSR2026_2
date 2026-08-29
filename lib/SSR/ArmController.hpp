@@ -21,8 +21,8 @@ class ServoController
 class RotationServoController
 {
     private:
-        int minUs = 500;
-        int maxUs = 2400;
+        int minUs = 700;
+        int maxUs = 2300;
         Servo servo;
 
     public:

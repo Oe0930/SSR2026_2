@@ -19,3 +19,4 @@ extern bool isOpt;
 extern bool isOpt_pre;
 
 void updateInput();
+void resetInput();
