@@ -5,7 +5,7 @@ DriveController::DriveController()
 
 }
 
-void DriveController::setUp()
+void DriveController::setUp(bool _isReverse[3])
 {
     for(int i = 0; i < 3; i++)
     {
@@ -13,6 +13,8 @@ void DriveController::setUp()
         pinMode(WHEEL_PWM_PINS[i], OUTPUT);
         ledcSetup(WHEEL_PWM_CHANNELS[i], 8000, 8);
         ledcAttachPin(WHEEL_PWM_PINS[i], WHEEL_PWM_CHANNELS[i]);
+
+        isReverse[i] = _isReverse[i];
     }
 }
 
@@ -40,7 +42,7 @@ void DriveController::drive(Structs::VectorFloat vec, float turn, float power)
     for(int i = 0; i < 3; i++)
     {
         speeds[i] = (maxSpeed != 0 ? speeds[i] / maxSpeed * power * 255 : 0);
+        speeds[i] *= isReverse ? -1 : 1;
         setSpeed(i, (int)speeds[i]);
-        //Serial.printf("Motor %d: %f\n", i, speeds[i]);
     }
 }

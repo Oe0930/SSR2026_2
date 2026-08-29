@@ -9,10 +9,11 @@ class DriveController
         int slowSpeed;
         
         int rGain = 1;
+        bool isReverse[3];
 
     public:
         DriveController();
-        void setUp();
+        void setUp(bool _isReverse[3]);
 
         void setSpeed(int motorNum, int speed);
         void drive(Structs::VectorFloat vec, float turn,float power);

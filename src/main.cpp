@@ -10,7 +10,8 @@ void setup()
 
     input.connect();
 
-    drive.setUp();
+    bool init[] = {false, false, false};
+    drive.setUp(init);
 
     etc[0].setUp(ETC_SERVO_PIN1, 90, 0, 180);
     etc[1].setUp(ETC_SERVO_PIN2, 90, 0, 180);
