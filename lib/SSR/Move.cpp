@@ -45,15 +45,28 @@ void move()
             etc[0].move(servoSpeed * (isX ? 1 : -1));
             etc[1].move(servoSpeed * (isX ? -1 : 1));
         }
+        else
+        {
+            etc[0].move(0);
+            etc[1].move(0);
+        }
 
         if(isL ^ isR)
         {
             back.move(backServoSpeed * (isL ? 1 : -1));
         }
+        else
+        {
+            back.move(0);
+        }
 
         if(isA ^ isB)
         {
             lift.move(liftSpeed * (isA ? 1 : -1));
+        }
+        else
+        {
+            lift.move(0);
         }
     }
     else
