@@ -5,7 +5,7 @@ ServoController::ServoController()
 
 }
 
-void ServoController::setUp(int pin, int defaultAngle, int _minAngle = 0, int _maxAngle = 180)
+void ServoController::setUp(int pin, int defaultAngle, int _minAngle, int _maxAngle)
 {
     servo.setPeriodHertz(50);
     servo.attach(pin, minUs, maxUs);

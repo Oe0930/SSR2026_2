@@ -15,7 +15,7 @@ class ServoController
 
     public:
         ServoController();
-        void setUp(int pin, int defaultAngle, int _minAngle = 0, int _maxAngle = 180);
+        void setUp(int pin, int defaultAngle, int _minAngle, int _maxAngle);
 
         void set(int angle);
         void move(float speed);

@@ -11,7 +11,7 @@ RotationServoController lift;
 
 const float servoSpeed = 0.001f;
 const float backServoSpeed = 0.01f;
-const float liftSpeed = 0.01f;
+const float liftSpeed = 0.1f;
 
 // ========== main ==========
 bool isAuto = false;
