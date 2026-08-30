@@ -26,11 +26,13 @@ class RotationServoController
     private:
         int minUs = 700;
         int maxUs = 2300;
+        int baseUs = 1500;
+        int usRange = 800;
         Servo servo;
 
     public:
         RotationServoController();
-        void setUp(int pin);
+        void setUp(int pin, int _baseUs, int _usRange);
 
         void move(float speed);
 };

@@ -38,17 +38,20 @@ RotationServoController::RotationServoController()
 
 }
 
-void RotationServoController::setUp(int pin)
+void RotationServoController::setUp(int pin, int _baseUs, int _usRange)
 {
+    baseUs = _baseUs;
+    usRange = _usRange;
+    minUs = baseUs - usRange;
+    maxUs = baseUs + usRange;
+
     servo.setPeriodHertz(50);
     servo.attach(pin, minUs, maxUs);
 }
 
 void RotationServoController::move(float speed)
 {
-    if (speed == 0) return;
-    int writeSpeed = constrain(90+speed*90, 0, 180);
-    servo.write(writeSpeed);
+    servo.writeMicroseconds(constrain(baseUs + (int)(speed*usRange), minUs, maxUs));
 }
 
 
