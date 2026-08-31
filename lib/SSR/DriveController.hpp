@@ -7,9 +7,13 @@ class DriveController
     private:
         int defaultSpeed;
         int slowSpeed;
+        const int speedThreshold = 2;
         
         int rGain = 1;
         bool isReverse[3];
+        int lastSpeed[3];
+        bool lastDirection[3];
+        bool isInitialized[3];
 
     public:
         DriveController();

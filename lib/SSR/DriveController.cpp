@@ -2,7 +2,12 @@
 
 DriveController::DriveController()
 {
-
+    for (int i = 0; i < 3; i++)
+    {
+        lastSpeed[i] = 0;
+        lastDirection[i] = true;
+        isInitialized[i] = false;
+    }
 }
 
 void DriveController::setUp(bool _isReverse[3])
@@ -22,8 +27,32 @@ void DriveController::setSpeed(int motorNum, int speed)
 {
     if (motorNum >= 0 && motorNum < 3)
     {
-        digitalWrite(WHEEL_DIR_PINS[motorNum], (speed > 0 ? HIGH : LOW));
-        ledcWrite(WHEEL_PWM_CHANNELS[motorNum], constrain(abs(speed), 0, 255));
+        bool isPositive = speed >= 0;
+        int absSpeed = constrain(abs(speed), 0, 255);
+
+        if (!isInitialized[motorNum])
+        {
+            lastSpeed[motorNum] = speed;
+            lastDirection[motorNum] = isPositive;
+            isInitialized[motorNum] = true;
+        }
+
+        bool directionChanged = (isPositive != lastDirection[motorNum]);
+        int speedDiff = abs(absSpeed - abs(lastSpeed[motorNum]));
+        bool isAlmostSame = (speedDiff <= speedThreshold && !directionChanged);
+
+        if (isAlmostSame)
+        {
+            return;
+        }
+
+        if (motorNum != 0) isPositive = !isPositive;
+
+        digitalWrite(WHEEL_DIR_PINS[motorNum], (isPositive ? HIGH : LOW));
+        ledcWrite(WHEEL_PWM_CHANNELS[motorNum], absSpeed);
+
+        lastSpeed[motorNum] = speed;
+        lastDirection[motorNum] = isPositive;
     }
 }
 
@@ -33,16 +62,18 @@ void DriveController::drive(Structs::VectorFloat vec, float turn, float power)
     vec.y = 2*vec.y - 1;
     turn = 2*turn - 1;
     float speeds[3] = {0, 0, 0};
-    speeds[0] = rGain * turn + vec.x;
+    speeds[0] = -rGain * turn + vec.x;
     speeds[1] = rGain * turn + (vec.x/2 - vec.y*sqrt(3)/2);
     speeds[2] = rGain * turn + (vec.x/2 + vec.y*sqrt(3)/2);
+
+    //Serial.printf("turn : %2f , speed[0] : %2f , speed[1] : %2f , speed[2] : %2f \n", turn, speeds[0], speeds[1], speeds[2]);
 
     // speedが最大値を超えないように正規化しつつ、最大まで速度を出す
     float maxSpeed = max(max(abs(speeds[0]), abs(speeds[1])), abs(speeds[2]));
     for(int i = 0; i < 3; i++)
     {
-        speeds[i] = (maxSpeed != 0 ? speeds[i] / maxSpeed * power * 255 : 0);
-        speeds[i] *= isReverse ? -1 : 1;
+        speeds[i] = (maxSpeed != 0 ? (speeds[i] / maxSpeed) * power * 255 : 0);
+        speeds[i] = constrain(speeds[i], -200, 200);
         setSpeed(i, (int)speeds[i]);
     }
 }

@@ -12,9 +12,9 @@ const uint8_t BACK_SERVO_PIN = 13;
 
 // 駆動DC
 
-// 0 : 後輪 
-// 1 : 右前輪 
-// 2 : 左前輪 
-const uint8_t WHEEL_PWM_PINS[] = { 19, 16, 22 };
-const uint8_t WHEEL_DIR_PINS[] = { 17, 15, 21 };
+// 0 : 後輪
+// 1 : 右前輪
+// 2 : 左前輪
+const uint8_t WHEEL_PWM_PINS[] = { 22, 16, 19 };
+const uint8_t WHEEL_DIR_PINS[] = { 21, 15, 17 };
 const uint8_t WHEEL_PWM_CHANNELS[] = { 3, 4, 5 };

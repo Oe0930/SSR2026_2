@@ -23,6 +23,7 @@ class InputManager
     public:
         InputManager();
         void connect();
+        void removePairedDevices();
 
         bool isConnected();
 

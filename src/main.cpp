@@ -21,6 +21,8 @@ void setup()
 
 void loop()
 {
+    static unsigned long lastRemovePairedDevices = 0;
+
     if (input.isConnected()) 
     {
         Serial.println("Contoroller is Connected!");
@@ -38,5 +40,13 @@ void loop()
         resetInput();
         drive.stop();
         lift.move(0);
+    }
+    else
+    {
+        if (millis() - lastRemovePairedDevices >= 5000)
+        {
+            input.removePairedDevices();
+            lastRemovePairedDevices = millis();
+        }
     }
 }

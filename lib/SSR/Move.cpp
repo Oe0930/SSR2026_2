@@ -38,7 +38,10 @@ void move()
         }
 
         // LスティックとRスティックで移動しつつ、ZLで減速
-        drive.drive(lStick, rStick.x, (float)1 - zL*slowGain);
+        float lStickAbs = (lStick.x-0.5f)*(lStick.x-0.5f) + (lStick.y-0.5f)*(lStick.y-0.5f);
+        lStickAbs = constrain(sqrt(lStickAbs), 0, 1.0f);
+        float power = constrain(((float)1 - zL*slowGain) * constrain((lStickAbs + abs(rStick.x-0.5)*2)/2, 0, 1), 0, 1);
+        drive.drive(lStick, rStick.x, power);
 
         if(isX ^ isY)
         {
@@ -79,12 +82,11 @@ void move()
         }
 
         // 自動制御
+        // tuple< 移動ベクトル, 回転量, パワー , 時間 >
         std::tuple<Structs::VectorFloat, float, float, unsigned long> autoMove[10];
-        autoMove[0] = std::make_tuple(Structs::makeVectorFloat(0, 1), 0, 1, 1000);
-        autoMove[1] = std::make_tuple(Structs::makeVectorFloat(1, 0), 0, -1, 1000);
-        autoMove[2] = std::make_tuple(Structs::makeVectorFloat(0, -1), 0, 0.5f, 1000);
-        autoMove[3] = std::make_tuple(Structs::makeVectorFloat(-1, 0), 0, -0.5f, 1000);
-        autoMove[4] = std::make_tuple(Structs::makeVectorFloat(0, 0), 0, 1, 0); // time <= 0 で終了
+        autoMove[0] = std::make_tuple(Structs::makeVectorFloat(0.5f, 1), 0, 0.5f, 500);
+        autoMove[0] = std::make_tuple(Structs::makeVectorFloat(0.5f, 0.0f), 0, 0.5f, 500);
+        autoMove[1] = std::make_tuple(Structs::makeVectorFloat(0.5f, 0.5f), 0, 1, 0); // time <= 0 で終了
 
         unsigned long _sumTime = 0;
         for(int i = 0; i < 10; i++)

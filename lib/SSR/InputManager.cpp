@@ -1,19 +1,6 @@
 #include "InputManager.hpp"
 using IM = InputManager;
 
-#include "esp_gap_bt_api.h"
-
-void removePairedDevices()
-{
-    uint8_t devices[20][6];
-    int count = esp_bt_gap_get_bond_device_num();
-    esp_bt_gap_get_bond_device_list(&count, devices);
-
-    for (int i = 0; i < count; i++) {
-        esp_bt_gap_remove_bond_device(devices[i]);
-    }
-}
-
 LimitSwitch::LimitSwitch()
 {
 
@@ -33,6 +20,18 @@ bool LimitSwitch::isPushed()
 IM::InputManager()
 {
     
+}
+
+#include "esp_gap_bt_api.h"
+void IM::removePairedDevices()
+{
+    uint8_t devices[20][6];
+    int count = esp_bt_gap_get_bond_device_num();
+    esp_bt_gap_get_bond_device_list(&count, devices);
+
+    for (int i = 0; i < count; i++) {
+        esp_bt_gap_remove_bond_device(devices[i]);
+    }
 }
 
 void IM::connect()
