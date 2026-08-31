@@ -1,6 +1,19 @@
 #include "InputManager.hpp"
 using IM = InputManager;
 
+#include "esp_gap_bt_api.h"
+
+void removePairedDevices()
+{
+    uint8_t devices[20][6];
+    int count = esp_bt_gap_get_bond_device_num();
+    esp_bt_gap_get_bond_device_list(&count, devices);
+
+    for (int i = 0; i < count; i++) {
+        esp_bt_gap_remove_bond_device(devices[i]);
+    }
+}
+
 LimitSwitch::LimitSwitch()
 {
 
@@ -26,6 +39,8 @@ void IM::connect()
 {
     PS4.begin("EC:E3:34:D2:AB:6A");
     Serial.println("Waiting for PS4...");
+
+    //removePairedDevices();
 }
 
 int IM::roundValue(int value)
