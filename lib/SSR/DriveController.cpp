@@ -30,13 +30,6 @@ void DriveController::setSpeed(int motorNum, int speed)
         bool isPositive = speed >= 0;
         int absSpeed = constrain(abs(speed), 0, 255);
 
-        if (!isInitialized[motorNum])
-        {
-            lastSpeed[motorNum] = speed;
-            lastDirection[motorNum] = isPositive;
-            isInitialized[motorNum] = true;
-        }
-
         bool directionChanged = (isPositive != lastDirection[motorNum]);
         int speedDiff = abs(absSpeed - abs(lastSpeed[motorNum]));
         bool isAlmostSame = (speedDiff <= speedThreshold && !directionChanged);
@@ -61,7 +54,16 @@ void DriveController::drive(Structs::VectorFloat vec, float turn, float power)
     vec.x = 2*vec.x - 1;
     vec.y = 2*vec.y - 1;
     turn = 2*turn - 1;
-    float speeds[3] = {0, 0, 0};
+
+    // vecの長さを1に正規化
+    if(vec.x != 0 || vec.y != 0)
+    {
+        float length = sqrt(vec.x*vec.x + vec.y*vec.y);
+        vec.x /= length;
+        vec.y /= length;
+    }
+
+    long double speeds[3] = {0, 0, 0};
     speeds[0] = -rGain * turn + vec.x;
     speeds[1] = rGain * turn + (vec.x/2 - vec.y*sqrt(3)/2);
     speeds[2] = rGain * turn + (vec.x/2 + vec.y*sqrt(3)/2);
@@ -69,11 +71,11 @@ void DriveController::drive(Structs::VectorFloat vec, float turn, float power)
     //Serial.printf("turn : %2f , speed[0] : %2f , speed[1] : %2f , speed[2] : %2f \n", turn, speeds[0], speeds[1], speeds[2]);
 
     // speedが最大値を超えないように正規化しつつ、最大まで速度を出す
-    float maxSpeed = max(max(abs(speeds[0]), abs(speeds[1])), abs(speeds[2]));
+    long double maxSpeed = max(max(abs(speeds[0]), abs(speeds[1])), abs(speeds[2]));
     for(int i = 0; i < 3; i++)
     {
-        speeds[i] = (maxSpeed != 0 ? (speeds[i] / maxSpeed) * power * 255 : 0);
-        speeds[i] = constrain(speeds[i], -200, 200);
+        speeds[i] = (maxSpeed != 0 ? (speeds[i] / maxSpeed) * (long double)power * 255 : 0);
+        speeds[i] = constrain(speeds[i], -255, 255);
         setSpeed(i, (int)speeds[i]);
     }
 }

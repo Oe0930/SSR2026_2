@@ -36,16 +36,3 @@ class RotationServoController
 
         void move(float speed);
 };
-
-//昇降機構のclassを作る(モーターがサーボじゃなければ)
-class DCMotorController
-{
-    private:
-        int motorPin;
-
-    public:
-        DCMotorController();
-        void setUp(int pin);
-
-        void move(float speed);
-};

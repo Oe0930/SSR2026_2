@@ -53,21 +53,3 @@ void RotationServoController::move(float speed)
 {
     servo.writeMicroseconds(constrain(baseUs + (int)(speed*usRange), minUs, maxUs));
 }
-
-
-DCMotorController::DCMotorController()
-{
-    motorPin = -1;
-}
-
-void DCMotorController::setUp(int pin)
-{
-    motorPin = pin;
-    pinMode(motorPin, OUTPUT);
-}
-
-void DCMotorController::move(float speed)
-{
-    int pwmValue = (int)(constrain(abs(speed), 0.0f, 1.0f) * 255);
-    analogWrite(motorPin, pwmValue);
-}

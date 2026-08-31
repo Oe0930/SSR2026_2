@@ -84,9 +84,9 @@ void move()
         // 自動制御
         // tuple< 移動ベクトル, 回転量, パワー , 時間 >
         std::tuple<Structs::VectorFloat, float, float, unsigned long> autoMove[10];
-        autoMove[0] = std::make_tuple(Structs::makeVectorFloat(0.5f, 1), 0, 0.5f, 500);
-        autoMove[0] = std::make_tuple(Structs::makeVectorFloat(0.5f, 0.0f), 0, 0.5f, 500);
-        autoMove[1] = std::make_tuple(Structs::makeVectorFloat(0.5f, 0.5f), 0, 1, 0); // time <= 0 で終了
+        autoMove[0] = std::make_tuple(Structs::makeVectorFloat(0.5f, 1), 0.5f, 0.5f, 500);
+        autoMove[0] = std::make_tuple(Structs::makeVectorFloat(0.5f, 0.0f), 0.5f, 0.5f, 500);
+        autoMove[1] = std::make_tuple(Structs::makeVectorFloat(0.5f, 0.5f), 0.5f, 0, 0); // time <= 0 で終了
 
         unsigned long _sumTime = 0;
         for(int i = 0; i < 10; i++)
