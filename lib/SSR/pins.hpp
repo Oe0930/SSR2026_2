@@ -2,7 +2,7 @@
 
 // サーボ
 const uint8_t ETC_SERVO_PIN1 = 32;
-const uint8_t ETC_SERVO_PIN2 = 19;
+const uint8_t ETC_SERVO_PIN2 = 18;
 const uint8_t LIFT_SERVO_PIN = 27;
 const uint8_t BACK_SERVO_PIN = 13;
 

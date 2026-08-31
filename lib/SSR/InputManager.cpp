@@ -24,7 +24,7 @@ IM::InputManager()
 
 void IM::connect()
 {
-    PS4.begin("EC:E3:34:D2:AB:6A");
+    PS4.begin("78:42:1C:2D:3B:AA");
     Serial.println("Waiting for PS4...");
 }
 
