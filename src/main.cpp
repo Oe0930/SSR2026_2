@@ -36,9 +36,7 @@ void loop()
 
         // 接続が切れたときはモーターを止める
         resetInput();
-        drive.setSpeed(0,0);
-        drive.setSpeed(1,0);
-        drive.setSpeed(2,0);
+        drive.stop();
         lift.move(0);
     }
 }

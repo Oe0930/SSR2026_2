@@ -17,4 +17,5 @@ class DriveController
 
         void setSpeed(int motorNum, int speed);
         void drive(Structs::VectorFloat vec, float turn,float power);
+        void stop();
 };

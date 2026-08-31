@@ -9,9 +9,9 @@ ServoController etc[2];
 ServoController back;
 RotationServoController lift;
 
-const float servoSpeed = 0.001f;
+const float servoSpeed = 0.1f;
 const float backServoSpeed = 0.01f;
-const float liftSpeed = 0.1f;
+const float liftSpeed = 1;
 
 // ========== main ==========
 bool isAuto = false;
@@ -21,7 +21,7 @@ unsigned long autoRunStartTime = 0;
 void finishAuto()
 {
     isAuto = false;
-    drive.drive(Structs::makeVectorFloat(0, 0), 0, 0);
+    drive.stop();
 }
 
 // モーターの制御

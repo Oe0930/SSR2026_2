@@ -46,3 +46,8 @@ void DriveController::drive(Structs::VectorFloat vec, float turn, float power)
         setSpeed(i, (int)speeds[i]);
     }
 }
+
+void DriveController::stop()
+{
+    drive(Structs::makeVectorFloat(0,0), 0, 0);
+}
