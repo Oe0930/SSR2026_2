@@ -1,28 +1,42 @@
-
-
 #include <Arduino.h>
-#include <BluetoothSerial.h>
-#include "esp_bt_device.h"
+#include "Move.hpp"
+#include "InputController.hpp"
+#include "DebugController.hpp"
 
-BluetoothSerial SerialBT;
-
-void setup() {
+// セットアップ
+void setup() 
+{
     Serial.begin(115200);
 
-    if (!SerialBT.begin("ESP32")) {
-        Serial.println("Bluetooth init failed");
-        while (1);
-    }
+    input.connect();
 
-    const uint8_t *mac = esp_bt_dev_get_address();
+    bool init[] = {false, false, false};
+    drive.setUp(init);
 
-    Serial.printf("BT MAC: %02X:%02X:%02X:%02X:%02X:%02X\n",
-                  mac[0], mac[1], mac[2],
-                  mac[3], mac[4], mac[5]);
+    etc[0].setUp(ETC_SERVO_PIN1, 90, 0, 180);
+    etc[1].setUp(ETC_SERVO_PIN2, 90, 0, 180);
+    back.setUp(BACK_SERVO_PIN, 90, 0, 180);
+    lift.setUp(LIFT_SERVO_PIN, 1500, 800);
 }
 
-void loop() {}
+void loop()
+{
+    if (input.isConnected()) 
+    {
+        Serial.println("Contoroller is Connected!");
 
-// EC:E3:34:D2:AB:6A // ESP32 Oe
-// 78:42:1c:2d:10:c6 // PS4
-// 78:42:1C:2D:3B:AA // ESP32 Yago
+        while(input.isConnected())
+        {
+            updateInput();
+            //debug();
+            move();
+        }
+
+        Serial.println("Contoroller is Disconnected...");
+
+        // 接続が切れたときはモーターを止める
+        resetInput();
+        drive.stop();
+        lift.move(0.3f);
+    }
+}

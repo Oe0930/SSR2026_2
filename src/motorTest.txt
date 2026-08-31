@@ -3,12 +3,13 @@
 #include "InputController.hpp"
 #include "DebugController.hpp"
 
+bool isOn = false;
+int lastTime = 0;
+
 // セットアップ
 void setup() 
 {
     Serial.begin(115200);
-
-    input.connect();
 
     bool init[] = {false, false, false};
     drive.setUp(init);
@@ -21,22 +22,19 @@ void setup()
 
 void loop()
 {
-    if (input.isConnected()) 
+    if(millis() - lastTime > 500)
     {
-        Serial.println("Contoroller is Connected!");
-
-        while(input.isConnected())
-        {
-            updateInput();
-            //debug();
-            move();
-        }
-
-        Serial.println("Contoroller is Disconnected...");
-
-        // 接続が切れたときはモーターを止める
-        resetInput();
-        drive.stop();
-        lift.move(0.3f);
+        lastTime = millis();
+        isOn = !isOn;
     }
+
+    etc[0].set(isOn ? 0 : 180);
+    etc[1].set(isOn ? 0 : 180);
+
+    back.set(isOn ? 0 : 180);
+    lift.move(isOn ? 1 : -1);
+
+    drive.setSpeed(0, isOn ? 100 : -100);
+    drive.setSpeed(1, isOn ? 100 : -100);
+    drive.setSpeed(2, isOn ? 100 : -100);
 }
