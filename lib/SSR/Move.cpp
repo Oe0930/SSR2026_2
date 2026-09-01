@@ -10,7 +10,7 @@ ServoController back;
 RotationServoController lift;
 
 const float servoSpeed = 0.1f;
-const float backServoSpeed = 0.01f;
+const float backServoSpeed = 0.1f;
 const float liftSpeed = 1;
 
 // ========== main ==========
@@ -38,7 +38,7 @@ void move()
         }
 
         // LスティックとRスティックで移動しつつ、ZLで減速
-        float lStickAbs = (lStick.x-0.5f)*(lStick.x-0.5f) + (lStick.y-0.5f)*(lStick.y-0.5f);
+        float lStickAbs = 4*(lStick.x-0.5f)*(lStick.x-0.5f) + 4*(lStick.y-0.5f)*(lStick.y-0.5f);
         lStickAbs = constrain(sqrt(lStickAbs), 0, 1.0f);
         float power = constrain(((float)1 - zL*slowGain) * constrain((lStickAbs + abs(rStick.x-0.5)*2)/2, 0, 1), 0, 1);
         drive.drive(lStick, rStick.x, power);
@@ -84,9 +84,11 @@ void move()
         // 自動制御
         // tuple< 移動ベクトル, 回転量, パワー , 時間 >
         std::tuple<Structs::VectorFloat, float, float, unsigned long> autoMove[10];
-        autoMove[0] = std::make_tuple(Structs::makeVectorFloat(0.5f, 1), 0.5f, 0.5f, 500);
-        autoMove[0] = std::make_tuple(Structs::makeVectorFloat(0.5f, 0.0f), 0.5f, 0.5f, 500);
-        autoMove[1] = std::make_tuple(Structs::makeVectorFloat(0.5f, 0.5f), 0.5f, 0, 0); // time <= 0 で終了
+        autoMove[0] = std::make_tuple(Structs::makeVectorFloat(0.5f, 1), 0.5f, 1.0f, 1750);
+        autoMove[1] = std::make_tuple(Structs::makeVectorFloat(1, 0.5f), 0.5f, 1.0f, 1750);
+        autoMove[2] = std::make_tuple(Structs::makeVectorFloat(0.5f, 0), 0.5f, 0.6f, 5000);
+        autoMove[3] = std::make_tuple(Structs::makeVectorFloat(1, 0.5f), 0.5f, 1.0f, 2000);
+        autoMove[4] = std::make_tuple(Structs::makeVectorFloat(0.5f, 0.5f), 0.5f, 0, 0); // time <= 0 で終了
 
         unsigned long _sumTime = 0;
         for(int i = 0; i < 10; i++)
@@ -100,7 +102,10 @@ void move()
             auto passedTime = millis() - autoRunStartTime;
             if(_sumTime <= passedTime && passedTime < _sumTime + std::get<3>(autoMove[i]))
             {
-                drive.drive(std::get<0>(autoMove[i]), std::get<1>(autoMove[i]), std::get<2>(autoMove[i]));
+                float power = std::get<2>(autoMove[i]);
+                if (passedTime - _sumTime < 1000) power *= (float)(passedTime - _sumTime) / 1000;
+                if (_sumTime + std::get<3>(autoMove[i]) - passedTime < 1000) power *= (float)(_sumTime + std::get<3>(autoMove[i]) - passedTime)/1000;
+                drive.drive(std::get<0>(autoMove[i]), std::get<1>(autoMove[i]), power);
                 break;
             }
             _sumTime += std::get<3>(autoMove[i]);
