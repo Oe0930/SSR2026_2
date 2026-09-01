@@ -40,7 +40,7 @@ void move()
         // LスティックとRスティックで移動しつつ、ZLで減速
         float lStickAbs = 4*(lStick.x-0.5f)*(lStick.x-0.5f) + 4*(lStick.y-0.5f)*(lStick.y-0.5f);
         lStickAbs = constrain(sqrt(lStickAbs), 0, 1.0f);
-        float power = constrain(((float)1 - zL*slowGain) * constrain((lStickAbs + abs(rStick.x-0.5)*2)/2, 0, 1), 0, 1);
+        float power = constrain(((float)1 - zL*slowGain) * constrain((lStickAbs + abs(rStick.x-0.5)*2), 0, 1), 0, 1);
         drive.drive(lStick, rStick.x, power);
 
         if(isX ^ isY)
@@ -105,7 +105,9 @@ void move()
                 float power = std::get<2>(autoMove[i]);
                 if (passedTime - _sumTime < 1000) power *= (float)(passedTime - _sumTime) / 1000;
                 if (_sumTime + std::get<3>(autoMove[i]) - passedTime < 1000) power *= (float)(_sumTime + std::get<3>(autoMove[i]) - passedTime)/1000;
-                drive.drive(std::get<0>(autoMove[i]), std::get<1>(autoMove[i]), power);
+                
+                drive.drive(std::get<0>(autoMove[i]), constrain(std::get<1>(autoMove[i]) + rStick.x, 0, 1), power);
+                
                 break;
             }
             _sumTime += std::get<3>(autoMove[i]);
