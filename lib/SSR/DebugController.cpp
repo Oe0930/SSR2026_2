@@ -24,5 +24,7 @@ void debug()
         if (isA || isB || isX || isY || isL || isR || isOpt) Serial.println();
 
         Serial.println("isAuto: " + String(isAuto));
+        
+        Serial.printf("Battery Level : %d\n", PS4.Battery());
     }
 }

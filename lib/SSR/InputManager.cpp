@@ -58,17 +58,33 @@ bool IM::isConnected()
     return PS4.isConnected();
 }
 
+Structs::VectorInt IM::PlusButton()
+{
+    if(PS4.Right()) return Structs::makeVectorInt(128, 0);
+    if(PS4.Left()) return Structs::makeVectorInt(-128, 0);
+    if(PS4.Up()) return Structs::makeVectorInt(0, 128);
+    if(PS4.Down()) return Structs::makeVectorInt(0, -128);
+
+    if(PS4.UpRight()) return Structs::makeVectorInt(64, 64);
+    if(PS4.UpLeft()) return Structs::makeVectorInt(-64, 64);
+    if(PS4.DownRight()) return Structs::makeVectorInt(64, -64);
+    if(PS4.DownLeft()) return Structs::makeVectorInt(-64, -64);
+
+    return Structs::makeVectorInt(0, 0);
+}
+
 Structs::VectorInt IM::LStick()
 {
     Structs::VectorInt ret;
 
     ret.x = roundValue(PS4.LStickX());
-    ret.x += (PS4.Right() ? 128 : 0) + (PS4.Left() ? -128 : 0);
+    ret.x += PlusButton().x;
     ret.x = constrain(ret.x, -127, 127);
 
     ret.y = roundValue(PS4.LStickY());
-    ret.y += (PS4.Up() ? 128 : 0) + (PS4.Down() ? -128 : 0);
+    ret.y += PlusButton().y;
     ret.y = constrain(ret.y, -127, 127);
+
     return ret;
 }
 
@@ -132,6 +148,14 @@ float IM::ZL()
 float IM::ZR()
 {
     return normalization(roundValue(PS4.R2Value()), 0, 128);
+}
+bool IM::lStickClick()
+{
+    return PS4.L3();
+}
+bool IM::rStickClick()
+{
+    return PS4.R3();
 }
 bool IM::ps()
 {

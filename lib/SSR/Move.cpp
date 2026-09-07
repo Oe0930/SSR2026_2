@@ -14,25 +14,32 @@ const float backServoSpeed = 0.1f;
 const float liftSpeed = 1;
 
 // ========== main ==========
-bool isAuto = false;
+int isAuto = 0; // 0: no, 1: 自律ゾーン+帰還, 2: 後ろアーム
 unsigned long autoRunStartTime = 0;
 
 // 自律走行停止処理
 void finishAuto()
 {
-    isAuto = false;
+    isAuto = 0;
     drive.stop();
 }
 
 // モーターの制御
 void move()
 {
-    if(!isAuto)
+    if(isAuto == 0)
     {
         // optionボタンで自律制御開始
         if(isOpt && !isOpt_pre)
         {
-            isAuto = true;
+            isAuto = 1;
+            autoRunStartTime = millis();
+            return;
+        }
+
+        if(isRClicked && !isRClicked_pre)
+        {
+            isAuto = 2;
             autoRunStartTime = millis();
             return;
         }
@@ -72,7 +79,7 @@ void move()
             lift.move(0);
         }
     }
-    else
+    else if(isAuto == 1)
     {
         // optionで自律制御の強制停止
         if(isOpt && !isOpt_pre)
@@ -120,5 +127,22 @@ void move()
             }
             _sumTime += std::get<3>(autoMove[i]);
         }
+    }
+    else if(isAuto == 2)
+    {
+        unsigned long passedTime = millis() - autoRunStartTime;
+        unsigned long allTime = 2000;
+
+        if((isRClicked && !isRClicked_pre) || passedTime > allTime)
+        {
+            finishAuto();
+            return;
+        }
+
+        // 自動制御
+        back.set(180 - 90*(float)passedTime / (float)allTime);
+
+        float maxPower = 0.5f;
+        drive.drive(Structs::makeVectorFloat(0.5f, 0.0f), 0.5f, maxPower * std::sin((3.14159f/2.0f) * (float)passedTime / (float)allTime));
     }
 }

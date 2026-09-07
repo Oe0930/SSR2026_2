@@ -13,6 +13,8 @@ float zL;
 float zR;
 bool isOpt;
 bool isOpt_pre = false;
+bool isRClicked;
+bool isRClicked_pre = false;
 
 void updateInput()
 {
@@ -26,6 +28,8 @@ void updateInput()
     isR = input.R();
     zL = min(input.ZL(), 1.0f);
     zR = min(input.ZR(), 1.0f);
+    isRClicked_pre = isRClicked;
+    isRClicked = input.rStickClick();
     isOpt_pre = isOpt;
     isOpt = input.option();
 }

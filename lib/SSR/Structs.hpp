@@ -14,6 +14,14 @@ namespace Structs
         float y = 0;
     };
 
+    inline VectorInt makeVectorInt(int x, int y)
+    {
+        VectorInt ret;
+        ret.x = x;
+        ret.y = y;
+        return ret;
+    }
+
     inline VectorFloat makeVectorFloat(float x, float y)
     {
         VectorFloat ret;

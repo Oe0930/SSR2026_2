@@ -20,6 +20,8 @@ class InputManager
         int roundValue(int value);
         float normalization(int value, int min, int max);
 
+        Structs::VectorInt PlusButton();
+
     public:
         InputManager();
         void connect();
@@ -40,6 +42,8 @@ class InputManager
         float ZR();
         bool L();
         float ZL();
+        bool lStickClick();
+        bool rStickClick();
         bool ps();
         bool option();
 };
