@@ -51,7 +51,7 @@ void DriveController::setSpeed(int motorNum, int speed)
     }
 }
 
-void DriveController::drive(Structs::VectorFloat vec, float turn, float power)
+void DriveController::drive(Structs::VectorFloat vec, float turn, float power, bool isAccelarate)
 {
     vec.x = 2*vec.x - 1;
     vec.y = 2*vec.y - 1;
@@ -74,34 +74,23 @@ void DriveController::drive(Structs::VectorFloat vec, float turn, float power)
 
     // speedが最大値を超えないように正規化しつつ、最大まで速度を出す
     long double maxSpeed = max(max(abs(speeds[0]), abs(speeds[1])), abs(speeds[2]));
+    unsigned long passedTime = millis() - preTime;
+    long double delta = 255 * (long double)passedTime / 200;
+
     for(int i = 0; i < 3; i++)
     {
         speeds[i] = (maxSpeed != 0 ? (speeds[i] / maxSpeed) * (long double)power * 255 : 0);
+        if(isAccelarate) speeds[i] = constrain(speeds[i], prePower[i] - delta, prePower[i] + delta);
         speeds[i] = constrain(speeds[i], -255, 255);
         setSpeed(i, (int)speeds[i]);
-    }
-}
 
-void DriveController::drive(Structs::VectorFloat vec, float turn, float power, bool isAccelarate)
-{
-    if(isAccelarate)
-    {
-        unsigned long passedTime = millis() - preTime;
-        float delta = (float)passedTime / 500;
-        float _power = constrain(power, prePower - delta, prePower + delta);
-        _power = constrain(_power, 0, 1);
+        prePower[i] = speeds[i];
+    }
 
-        DriveController::drive(vec, turn, _power);
-        prePower = _power;
-        preTime = millis();
-    }
-    else
-    {
-        DriveController::drive(vec, turn, power);
-    }
+    preTime = millis();
 }
 
 void DriveController::stop()
 {
-    drive(Structs::makeVectorFloat(0,0), 0, 0);
+    drive(Structs::makeVectorFloat(0,0), 0, 0, true);
 }

@@ -121,7 +121,7 @@ void move()
                 if (passedTime - _sumTime < 1000) power *= (float)(passedTime - _sumTime) / 1000;
                 if (_sumTime + std::get<3>(autoMove[i]) - passedTime < 1000) power *= (float)(_sumTime + std::get<3>(autoMove[i]) - passedTime)/1000;
                 
-                drive.drive(std::get<0>(autoMove[i]), constrain((std::get<1>(autoMove[i]) + rStick.x)/2, 0, 1), power);
+                drive.drive(std::get<0>(autoMove[i]), constrain((std::get<1>(autoMove[i]) + rStick.x)/2, 0, 1), power, false);
                 
                 break;
             }
@@ -143,6 +143,6 @@ void move()
         back.set(90 + 90*(float)passedTime / (float)allTime);
 
         float maxPower = 0.15f;
-        drive.drive(Structs::makeVectorFloat(0.5f, 0.0f), 0.5f, maxPower * std::sin((3.14159f/2.0f) * (float)passedTime / (float)allTime));
+        drive.drive(Structs::makeVectorFloat(0.5f, 0.0f), 0.5f, maxPower * std::sin((3.14159f/2.0f) * (float)passedTime / (float)allTime), false);
     }
 }
