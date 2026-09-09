@@ -13,10 +13,10 @@ void setup()
     bool init[] = {false, false, false};
     drive.setUp(init);
 
-    etc[0].setUp(ETC_SERVO_PIN1, 90, 0, 180);
-    etc[1].setUp(ETC_SERVO_PIN2, 90, 0, 180);
-    back.setUp(BACK_SERVO_PIN, 90, 90, 180);
-    lift.setUp(LIFT_SERVO_PIN, 1530, 770);
+    etc[0].setUp(ETC_SERVO_PIN1, 0, 0, 180);
+    etc[1].setUp(ETC_SERVO_PIN2, 180, 0, 180);
+    back.setUp(BACK_SERVO_PIN, 180, 93, 180);
+    lift.setUp(LIFT_SERVO_PIN, 1500, 800);
 }
 
 void loop()

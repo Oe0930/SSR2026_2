@@ -14,7 +14,7 @@ extern float slowGain;
 extern const float servoSpeed;
 extern const float backServoSpeed;
 extern const float liftSpeed;
-extern bool isAuto;
+extern int isAuto;
 extern unsigned long autoRunStartTime;
 
 void finishAuto();

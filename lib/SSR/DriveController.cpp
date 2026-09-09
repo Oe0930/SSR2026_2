@@ -12,6 +12,8 @@ DriveController::DriveController()
 
 void DriveController::setUp(bool _isReverse[3])
 {
+    preTime = millis();
+
     for(int i = 0; i < 3; i++)
     {
         pinMode(WHEEL_DIR_PINS[i], OUTPUT);
@@ -77,6 +79,25 @@ void DriveController::drive(Structs::VectorFloat vec, float turn, float power)
         speeds[i] = (maxSpeed != 0 ? (speeds[i] / maxSpeed) * (long double)power * 255 : 0);
         speeds[i] = constrain(speeds[i], -255, 255);
         setSpeed(i, (int)speeds[i]);
+    }
+}
+
+void DriveController::drive(Structs::VectorFloat vec, float turn, float power, bool isAccelarate)
+{
+    if(isAccelarate)
+    {
+        unsigned long passedTime = millis() - preTime;
+        float delta = (float)passedTime / 500;
+        float _power = constrain(power, prePower - delta, prePower + delta);
+        _power = constrain(_power, 0, 1);
+
+        DriveController::drive(vec, turn, _power);
+        prePower = _power;
+        preTime = millis();
+    }
+    else
+    {
+        DriveController::drive(vec, turn, power);
     }
 }
 

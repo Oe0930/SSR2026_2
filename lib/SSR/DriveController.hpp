@@ -8,6 +8,9 @@ class DriveController
         int defaultSpeed;
         int slowSpeed;
         const int speedThreshold = 2;
+
+        float prePower = 0;
+        unsigned long preTime = 0;
         
         int rGain = 1;
         bool isReverse[3];
@@ -20,6 +23,7 @@ class DriveController
         void setUp(bool _isReverse[3]);
 
         void setSpeed(int motorNum, int speed);
-        void drive(Structs::VectorFloat vec, float turn,float power);
+        void drive(Structs::VectorFloat vec, float turn, float power);
+        void drive(Structs::VectorFloat vec, float turn, float power, bool isAccelarate);
         void stop();
 };

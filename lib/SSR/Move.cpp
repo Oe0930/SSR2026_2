@@ -10,7 +10,7 @@ ServoController back;
 RotationServoController lift;
 
 const float servoSpeed = 0.1f;
-const float backServoSpeed = 0.1f;
+const float backServoSpeed = 0.03f;
 const float liftSpeed = 1;
 
 // ========== main ==========
@@ -48,7 +48,7 @@ void move()
         float lStickAbs = 4*(lStick.x-0.5f)*(lStick.x-0.5f) + 4*(lStick.y-0.5f)*(lStick.y-0.5f);
         lStickAbs = constrain(sqrt(lStickAbs), 0, 1.0f);
         float power = constrain(((float)1 - zL*slowGain) * constrain((lStickAbs + abs(rStick.x-0.5)*2), 0, 1), 0, 1);
-        drive.drive(lStick, rStick.x, power);
+        drive.drive(lStick, rStick.x, power, true);
 
         if(isX ^ isY)
         {
@@ -72,7 +72,7 @@ void move()
 
         if(isA ^ isB)
         {
-            lift.move(liftSpeed * (isA ? 1 : -1));
+            lift.move(liftSpeed * (isA ? -1 : 1));
         }
         else
         {
@@ -121,7 +121,7 @@ void move()
                 if (passedTime - _sumTime < 1000) power *= (float)(passedTime - _sumTime) / 1000;
                 if (_sumTime + std::get<3>(autoMove[i]) - passedTime < 1000) power *= (float)(_sumTime + std::get<3>(autoMove[i]) - passedTime)/1000;
                 
-                drive.drive(std::get<0>(autoMove[i]), constrain(std::get<1>(autoMove[i]) + rStick.x, 0, 1), power);
+                drive.drive(std::get<0>(autoMove[i]), constrain((std::get<1>(autoMove[i]) + rStick.x)/2, 0, 1), power);
                 
                 break;
             }
@@ -140,9 +140,9 @@ void move()
         }
 
         // 自動制御
-        back.set(180 - 90*(float)passedTime / (float)allTime);
+        back.set(90 + 90*(float)passedTime / (float)allTime);
 
-        float maxPower = 0.5f;
+        float maxPower = 0.15f;
         drive.drive(Structs::makeVectorFloat(0.5f, 0.0f), 0.5f, maxPower * std::sin((3.14159f/2.0f) * (float)passedTime / (float)allTime));
     }
 }
