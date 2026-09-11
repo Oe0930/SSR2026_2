@@ -5,6 +5,7 @@
 class ServoController
 {
     private:
+        int pin;
         int minUs = 500;
         int maxUs = 2400;
         float currentAngle = 0;
@@ -13,11 +14,18 @@ class ServoController
         int minAngle;
         int maxAngle;
 
+
+        unsigned long lastUsedTime = 0;
+        float lastAngle = -1;
+
     public:
+        bool isAttached = false;
         ServoController();
         void setUp(int pin, int defaultAngle, int _minAngle, int _maxAngle);
+        void attach();
+        void detach();
 
-        void set(int angle);
+        void set(float angle);
         void move(float speed);
 };
 

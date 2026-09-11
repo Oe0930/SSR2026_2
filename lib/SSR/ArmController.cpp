@@ -5,31 +5,65 @@ ServoController::ServoController()
 
 }
 
-void ServoController::setUp(int pin, int defaultAngle, int _minAngle, int _maxAngle)
+void ServoController::setUp(int _pin, int defaultAngle, int _minAngle, int _maxAngle)
 {
     servo.setPeriodHertz(50);
-    servo.attach(pin, minUs, maxUs);
+    pin = _pin;
+    attach();
     
-    currentAngle = defaultAngle;
-    servo.write(currentAngle);
+    set(currentAngle);
+
+    lastAngle = defaultAngle;
+    lastUsedTime = millis() - 5000;
 
     minAngle = _minAngle;
     maxAngle = _maxAngle;
+
+    detach();
 }
 
-void ServoController::set(int angle)
+void ServoController::attach()
+{
+    if(!isAttached)
+    {
+        isAttached = true;
+        servo.attach(pin);
+    }
+}
+
+void ServoController::detach()
+{
+    if(isAttached)
+    {
+        isAttached = false;
+        servo.detach();
+    }
+}
+
+void ServoController::set(float angle)
 {
     currentAngle = constrain(angle, minAngle, maxAngle);
-    servo.write(currentAngle);
+
+    if(currentAngle == lastAngle)
+    {
+        if(millis() - lastUsedTime > 3000)
+        {
+            detach();
+        }
+    }
+    else
+    {
+        lastAngle = currentAngle;
+        lastUsedTime = millis();
+        
+        attach();
+        servo.write((int)currentAngle);  
+    }
 }
 
 void ServoController::move(float speed)
 {
-    if (speed == 0) return;
-
-    currentAngle += speed;
-    currentAngle = constrain(currentAngle, minAngle, maxAngle);
-    servo.write((int)currentAngle);
+    set(currentAngle + speed);
 }
 
 

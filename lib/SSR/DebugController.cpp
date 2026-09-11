@@ -26,5 +26,8 @@ void debug()
         Serial.println("isAuto: " + String(isAuto));
         
         Serial.printf("Battery Level : %d\n", PS4.Battery());
+
+        //Serial.print("ETC[0].isAttached : ");
+        //Serial.println(etc[0].isAttached);
     }
 }
