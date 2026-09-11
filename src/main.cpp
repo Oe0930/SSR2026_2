@@ -15,7 +15,7 @@ void setup()
 
     etc[0].setUp(ETC_SERVO_PIN1, 0, 0, 180);
     etc[1].setUp(ETC_SERVO_PIN2, 180, 0, 180);
-    back.setUp(BACK_SERVO_PIN, 180, 0, 90);
+    back.setUp(BACK_SERVO_PIN, 90, 0, 90);
     lift.setUp(LIFT_SERVO_PIN, 1500, 800);
 }
 
@@ -30,7 +30,7 @@ void loop()
         while(input.isConnected())
         {
             updateInput();
-            //debug();
+            debug();
             move();
         }
 

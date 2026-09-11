@@ -32,15 +32,21 @@ class ServoController
 class RotationServoController
 {
     private:
+        int pin = -1;
         int minUs = 700;
         int maxUs = 2300;
         int baseUs = 1500;
         int usRange = 800;
+        int lastUs = -1;
+        unsigned long lastUsedTime = 0;
         Servo servo;
 
     public:
+        bool isAttached = false;
         RotationServoController();
         void setUp(int pin, int _baseUs, int _usRange);
+        void attach();
+        void detach();
 
         void move(float speed);
 };

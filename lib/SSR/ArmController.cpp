@@ -72,18 +72,57 @@ RotationServoController::RotationServoController()
 
 }
 
-void RotationServoController::setUp(int pin, int _baseUs, int _usRange)
+void RotationServoController::attach()
 {
+    if(!isAttached)
+    {
+        isAttached = true;
+        servo.attach(pin, minUs, maxUs);
+    }
+}
+
+void RotationServoController::detach()
+{
+    if(isAttached)
+    {
+        isAttached = false;
+        servo.detach();
+    }
+}
+
+void RotationServoController::setUp(int _pin, int _baseUs, int _usRange)
+{
+    pin = _pin;
     baseUs = _baseUs;
     usRange = _usRange;
     minUs = baseUs - usRange;
     maxUs = baseUs + usRange;
 
     servo.setPeriodHertz(50);
-    servo.attach(pin, minUs, maxUs);
+    attach();
+    servo.writeMicroseconds(baseUs);
+    lastUs = baseUs;
+    lastUsedTime = millis() - 5000;
+    detach();
 }
 
 void RotationServoController::move(float speed)
 {
-    servo.writeMicroseconds(constrain(baseUs + (int)(speed*usRange), minUs, maxUs));
+    int targetUs = constrain(baseUs + (int)(speed*usRange), minUs, maxUs);
+
+    if(targetUs == lastUs)
+    {
+        if(millis() - lastUsedTime > 3000)
+        {
+            detach();
+        }
+    }
+    else
+    {
+        lastUs = targetUs;
+        lastUsedTime = millis();
+
+        attach();
+        servo.writeMicroseconds(targetUs);
+    }
 }
