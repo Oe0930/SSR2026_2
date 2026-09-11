@@ -30,7 +30,7 @@ void loop()
         while(input.isConnected())
         {
             updateInput();
-            debug();
+            //debug();
             move();
         }
 

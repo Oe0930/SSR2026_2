@@ -63,7 +63,7 @@ void move()
 
         if(isL ^ isR)
         {
-            back.move(backServoSpeed * (isL ? 1 : -1));
+            back.move(backServoSpeed * (isR ? 1 : -1));
         }
         else
         {
@@ -140,7 +140,7 @@ void move()
         }
 
         // 自動制御
-        back.set(90 + 90*(float)passedTime / (float)allTime);
+        back.set(0 + 90*(float)passedTime / (float)allTime);
 
         float maxPower = 0.15f;
         drive.drive(Structs::makeVectorFloat(0.5f, 0.0f), 0.5f, maxPower * std::sin((3.14159f/2.0f) * (float)passedTime / (float)allTime), false);
