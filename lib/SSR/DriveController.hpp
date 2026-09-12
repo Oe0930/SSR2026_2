@@ -18,6 +18,8 @@ class DriveController
         bool lastDirection[3];
         bool isInitialized[3];
 
+        unsigned long accelTime = 500;
+
     public:
         DriveController();
         void setUp(bool _isReverse[3]);

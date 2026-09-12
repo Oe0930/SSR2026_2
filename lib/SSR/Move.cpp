@@ -2,7 +2,8 @@
 
 // ========== Drive ==========
 DriveController drive;
-float slowGain = 0.6f;
+float slowGainL = 0.9f;
+float slowGainR = 0.6f;
 
 // ========== Arm ==========
 ServoController etc[2];
@@ -47,7 +48,7 @@ void move()
         // LスティックとRスティックで移動しつつ、ZLで減速
         float lStickAbs = 4*(lStick.x-0.5f)*(lStick.x-0.5f) + 4*(lStick.y-0.5f)*(lStick.y-0.5f);
         lStickAbs = constrain(sqrt(lStickAbs), 0, 1.0f);
-        float power = constrain(((float)1 - zL*slowGain) * constrain((lStickAbs + abs(rStick.x-0.5)*2), 0, 1), 0, 1);
+        float power = constrain(((float)1 - zL*slowGainL) * ((float)1 - zR*slowGainR) * constrain((lStickAbs + abs(rStick.x-0.5)*2), 0, 1), 0, 1);
         drive.drive(lStick, rStick.x, power, true);
 
         if(isX ^ isY)
@@ -142,7 +143,7 @@ void move()
         // 自動制御
         back.set(0 + 90*(float)passedTime / (float)allTime);
 
-        float maxPower = 0.15f;
+        float maxPower = 0.1f;
         drive.drive(Structs::makeVectorFloat(0.5f, 0.0f), 0.5f, maxPower * std::sin((3.14159f/2.0f) * (float)passedTime / (float)allTime), false);
     }
 }

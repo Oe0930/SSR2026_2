@@ -55,6 +55,7 @@ void DriveController::drive(Structs::VectorFloat vec, float turn, float power, b
 {
     vec.x = 2*vec.x - 1;
     vec.y = 2*vec.y - 1;
+    vec.y *= -1;
     turn = 2*turn - 1;
 
     // vecの長さを1に正規化
@@ -75,12 +76,14 @@ void DriveController::drive(Structs::VectorFloat vec, float turn, float power, b
     // speedが最大値を超えないように正規化しつつ、最大まで速度を出す
     long double maxSpeed = max(max(abs(speeds[0]), abs(speeds[1])), abs(speeds[2]));
     unsigned long passedTime = millis() - preTime;
-    long double delta = 255 * (long double)passedTime / 200;
+    long double delta = 255 * (long double)passedTime / accelTime;
 
     for(int i = 0; i < 3; i++)
     {
         speeds[i] = (maxSpeed != 0 ? (speeds[i] / maxSpeed) * (long double)power * 255 : 0);
-        if(isAccelarate) speeds[i] = constrain(speeds[i], prePower[i] - delta, prePower[i] + delta);
+
+        if(isAccelarate) speeds[i] = constrain(speeds[i], prePower[i] - 5*delta, prePower[i] + delta);
+
         speeds[i] = constrain(speeds[i], -255, 255);
         setSpeed(i, (int)speeds[i]);
 
