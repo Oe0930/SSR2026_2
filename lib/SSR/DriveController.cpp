@@ -78,7 +78,7 @@ void DriveController::drive(Structs::VectorFloat vec, float turn, float power, b
         long double deltaVecLength = sqrt(deltaVec.x*deltaVec.x + deltaVec.y*deltaVec.y);
         float deltaTurn = abs(turn - preTurn);
         
-        prePower -= deltaVecLength + deltaTurn;
+        prePower -= deltaVecLength/2 + deltaTurn/2;
         prePower = constrain(prePower, 0, 1);
         
         power = constrain(power, prePower - deltaTime, prePower + deltaTime);
