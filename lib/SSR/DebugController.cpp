@@ -27,7 +27,7 @@ void debug()
         
         Serial.printf("Battery Level : %d\n", PS4.Battery());
 
-        Serial.print("Lift.isAttached : ");
-        Serial.println(lift.isAttached ? "True" : "False");
+        //Serial.print("Lift.isAttached : ");
+        //Serial.println(lift.isAttached ? "True" : "False");
     }
 }

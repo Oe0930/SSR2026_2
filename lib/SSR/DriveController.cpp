@@ -71,29 +71,38 @@ void DriveController::drive(Structs::VectorFloat vec, float turn, float power, b
     speeds[1] = rGain * turn + (vec.x/2 - vec.y*sqrt(3)/2);
     speeds[2] = rGain * turn + (vec.x/2 + vec.y*sqrt(3)/2);
 
-    //Serial.printf("turn : %2f , speed[0] : %2f , speed[1] : %2f , speed[2] : %2f \n", turn, speeds[0], speeds[1], speeds[2]);
+    if(isAccelarate)
+    {
+        long double deltaTime = (long double)1 / accelTime;
+        Structs::VectorFloat deltaVec = Structs::makeVectorFloat(vec.x - preVec.x, vec.y - preVec.y);
+        long double deltaVecLength = sqrt(deltaVec.x*deltaVec.x + deltaVec.y*deltaVec.y);
+        float deltaTurn = abs(turn - preTurn);
+        
+        prePower -= deltaVecLength + deltaTurn;
+        prePower = constrain(prePower, 0, 1);
+        
+        power = constrain(power, prePower - deltaTime, prePower + deltaTime);
+        power = constrain(power, 0, 1);
+    }
 
     // speedが最大値を超えないように正規化しつつ、最大まで速度を出す
     long double maxSpeed = max(max(abs(speeds[0]), abs(speeds[1])), abs(speeds[2]));
-    unsigned long passedTime = millis() - preTime;
-    long double delta = 255 * (long double)passedTime / accelTime;
 
     for(int i = 0; i < 3; i++)
     {
         speeds[i] = (maxSpeed != 0 ? (speeds[i] / maxSpeed) * (long double)power * 255 : 0);
 
-        if(isAccelarate) speeds[i] = constrain(speeds[i], prePower[i] - 5*delta, prePower[i] + delta);
-
         speeds[i] = constrain(speeds[i], -255, 255);
         setSpeed(i, (int)speeds[i]);
-
-        prePower[i] = speeds[i];
     }
-
+    
+    preVec = vec;
+    preTurn = turn;
+    prePower = power;
     preTime = millis();
 }
 
 void DriveController::stop()
 {
-    drive(Structs::makeVectorFloat(0,0), 0, 0, true);
+    drive(Structs::makeVectorFloat(0,0), 0, 0, false);
 }

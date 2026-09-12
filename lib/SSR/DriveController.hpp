@@ -9,7 +9,9 @@ class DriveController
         int slowSpeed;
         const int speedThreshold = 2;
 
-        float prePower[3] = {0,0,0};
+        Structs::VectorFloat preVec;
+        float preTurn = 0;
+        float prePower = 0;
         unsigned long preTime = 0;
         
         int rGain = 1;
@@ -18,7 +20,7 @@ class DriveController
         bool lastDirection[3];
         bool isInitialized[3];
 
-        unsigned long accelTime = 500;
+        unsigned long accelTime = 20000;
 
     public:
         DriveController();
