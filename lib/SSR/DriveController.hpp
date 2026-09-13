@@ -14,13 +14,12 @@ class DriveController
         float prePower = 0;
         unsigned long preTime = 0;
         
-        int rGain = 1;
         bool isReverse[3];
         int lastSpeed[3];
         bool lastDirection[3];
         bool isInitialized[3];
 
-        unsigned long accelTime = 20000;
+        unsigned long accelTime = 5000;
 
     public:
         DriveController();

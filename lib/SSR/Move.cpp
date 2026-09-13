@@ -62,9 +62,7 @@ void move()
         }
 
         // LスティックとRスティックで移動しつつ、ZLで減速
-        float lStickAbs = 4*(lStick.x-0.5f)*(lStick.x-0.5f) + 4*(lStick.y-0.5f)*(lStick.y-0.5f);
-        lStickAbs = constrain(sqrt(lStickAbs), 0, 1.0f);
-        float power = constrain(((float)1 - zL*slowGainL) * ((float)1 - zR*slowGainR) * constrain((lStickAbs + abs(rStick.x-0.5)*2), 0, 1), 0, 1);
+        float power = constrain(((float)1 - zL*slowGainL) * ((float)1 - zR*slowGainR), 0, 1);
         drive.drive(lStick, rStick.x, power, true);
 
         if(isX ^ isY)

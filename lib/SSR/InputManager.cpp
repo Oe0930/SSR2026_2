@@ -65,10 +65,11 @@ Structs::VectorInt IM::PlusButton()
     if(PS4.Up()) return Structs::makeVectorInt(0, 128);
     if(PS4.Down()) return Structs::makeVectorInt(0, -128);
 
-    if(PS4.UpRight()) return Structs::makeVectorInt(64, 64);
-    if(PS4.UpLeft()) return Structs::makeVectorInt(-64, 64);
-    if(PS4.DownRight()) return Structs::makeVectorInt(64, -64);
-    if(PS4.DownLeft()) return Structs::makeVectorInt(-64, -64);
+    // 90 ~= 128 / sqrt(2)
+    if(PS4.UpRight()) return Structs::makeVectorInt(90, 90);
+    if(PS4.UpLeft()) return Structs::makeVectorInt(-90, 90);
+    if(PS4.DownRight()) return Structs::makeVectorInt(90, -90);
+    if(PS4.DownLeft()) return Structs::makeVectorInt(-90, -90);
 
     return Structs::makeVectorInt(0, 0);
 }
@@ -84,6 +85,13 @@ Structs::VectorInt IM::LStick()
     ret.y = roundValue(PS4.LStickY());
     ret.y += PlusButton().y;
     ret.y = constrain(ret.y, -127, 127);
+
+    float length = sqrt(ret.x*ret.x + ret.y*ret.y);
+    if(length > 128)
+    {
+        ret.x = constrain(ret.x * 128/length, -127, 127);
+        ret.y = constrain(ret.y * 128/length, -127, 127);
+    }
 
     return ret;
 }
