@@ -32,15 +32,6 @@ void DriveController::setSpeed(int motorNum, int speed)
         bool isPositive = speed >= 0;
         int absSpeed = constrain(abs(speed), 0, 255);
 
-        bool directionChanged = (isPositive != lastDirection[motorNum]);
-        int speedDiff = abs(absSpeed - abs(lastSpeed[motorNum]));
-        bool isAlmostSame = (speedDiff <= speedThreshold && !directionChanged);
-
-        if (isAlmostSame)
-        {
-            return;
-        }
-
         if (motorNum != 0) isPositive = !isPositive;
 
         digitalWrite(WHEEL_DIR_PINS[motorNum], (isPositive ? HIGH : LOW));
@@ -57,6 +48,26 @@ void DriveController::drive(Structs::VectorFloat vec, float turn, float power, b
     vec.y = 2*vec.y - 1;
     vec.y *= -1;
     turn = 2*turn - 1;
+
+    // 最終的な出力がモーター出力を超えないように入力値を調整する
+    float translationStrength = constrain(sqrt(vec.x * vec.x + vec.y * vec.y), 0.0f, 1.0f);
+
+    float inputStrength = max(translationStrength, abs(turn));
+
+    long double rawSpeeds[3];
+    rawSpeeds[0] = -turn + vec.x;
+    rawSpeeds[1] =  turn + (vec.x / 2 - vec.y * sqrt(3) / 2);
+    rawSpeeds[2] =  turn + (vec.x / 2 + vec.y * sqrt(3) / 2);
+
+    long double wheelPeak = max(max(abs(rawSpeeds[0]), abs(rawSpeeds[1])), abs(rawSpeeds[2]));
+
+    if (wheelPeak != 0) 
+    {
+        float gain = inputStrength / wheelPeak;
+        vec.x *= gain;
+        vec.y *= gain;
+        turn *= gain;
+    }
 
     vec.x *= power;
     vec.y *= power;
