@@ -36,9 +36,6 @@ void DriveController::setSpeed(int motorNum, int speed)
 
         digitalWrite(WHEEL_DIR_PINS[motorNum], (isPositive ? HIGH : LOW));
         ledcWrite(WHEEL_PWM_CHANNELS[motorNum], absSpeed);
-
-        lastSpeed[motorNum] = speed;
-        lastDirection[motorNum] = isPositive;
     }
 }
 
