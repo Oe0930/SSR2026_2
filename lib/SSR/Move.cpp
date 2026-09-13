@@ -10,6 +10,17 @@ ServoController etc[2];
 ServoController back;
 RotationServoController lift;
 
+namespace
+{
+    void stopArmActuators()
+    {
+        etc[0].stop();
+        etc[1].stop();
+        back.stop();
+        lift.stop();
+    }
+}
+
 const float servoSpeed = 0.1f;
 const float backServoSpeed = 0.03f;
 const float liftSpeed = 1;
@@ -23,6 +34,7 @@ void finishAuto()
 {
     isAuto = 0;
     drive.stop();
+    stopArmActuators();
 }
 
 // モーターの制御
@@ -33,6 +45,8 @@ void move()
         // optionボタンで自律制御開始
         if(isOpt && !isOpt_pre)
         {
+            drive.stop();
+            stopArmActuators();
             isAuto = 1;
             autoRunStartTime = millis();
             return;
@@ -40,6 +54,8 @@ void move()
 
         if(isRClicked && !isRClicked_pre)
         {
+            drive.stop();
+            stopArmActuators();
             isAuto = 2;
             autoRunStartTime = millis();
             return;
@@ -91,23 +107,21 @@ void move()
 
         // 自動制御
         // tuple< 移動ベクトル, 回転量, パワー , 時間 >
-        std::tuple<Structs::VectorFloat, float, float, unsigned long> autoMove[20];
-        autoMove[0] = std::make_tuple(Structs::makeVectorFloat(0.5f, 1), 0.5f, 1.0f, 1500);
-        autoMove[1] = std::make_tuple(Structs::makeVectorFloat(1, 0.5f), 0.5f, 1.0f, 1750);
-        autoMove[2] = std::make_tuple(Structs::makeVectorFloat(0.5f, 0), 0.5f, 0.6f, 5000);
-        autoMove[3] = std::make_tuple(Structs::makeVectorFloat(1, 0.5f), 0.5f, 1.0f, 2000);
-
-        autoMove[4] = std::make_tuple(Structs::makeVectorFloat(0.5f, 0.5f), 0.5f, 0.0f, 500);
-
-        autoMove[5] = std::make_tuple(Structs::makeVectorFloat(0, 0.5f), 0.5f, 1.0f, 2000);
-        autoMove[6] = std::make_tuple(Structs::makeVectorFloat(0.5f, 1.0f), 0.5f, 1.0f, 3400);
-        autoMove[7] = std::make_tuple(Structs::makeVectorFloat(0.0f, 0.5f), 0.5f, 1.0f, 1750);
-        autoMove[8] = std::make_tuple(Structs::makeVectorFloat(0.5f, 0.0f), 0.5f, 1.0f, 1750);
-
-        autoMove[9] = std::make_tuple(Structs::makeVectorFloat(0.5f, 0.5f), 0.5f, 0, 0); // time <= 0 で終了
+        static const std::tuple<Structs::VectorFloat, float, float, unsigned long> autoMove[] = {
+            std::make_tuple(Structs::makeVectorFloat(0.5f, 1.0f), 0.5f, 1.0f, 1500UL),
+            std::make_tuple(Structs::makeVectorFloat(1.0f, 0.5f), 0.5f, 1.0f, 1750UL),
+            std::make_tuple(Structs::makeVectorFloat(0.5f, 0.0f), 0.5f, 0.6f, 5000UL),
+            std::make_tuple(Structs::makeVectorFloat(1.0f, 0.5f), 0.5f, 1.0f, 2000UL),
+            std::make_tuple(Structs::makeVectorFloat(0.5f, 0.5f), 0.5f, 0.0f, 500UL),
+            std::make_tuple(Structs::makeVectorFloat(0.0f, 0.5f), 0.5f, 1.0f, 2000UL),
+            std::make_tuple(Structs::makeVectorFloat(0.5f, 1.0f), 0.5f, 1.0f, 3400UL),
+            std::make_tuple(Structs::makeVectorFloat(0.0f, 0.5f), 0.5f, 1.0f, 1750UL),
+            std::make_tuple(Structs::makeVectorFloat(0.5f, 0.0f), 0.5f, 1.0f, 1750UL),
+            std::make_tuple(Structs::makeVectorFloat(0.5f, 0.5f), 0.5f, 0.0f, 0UL) // time <= 0 で終了
+        };
 
         unsigned long _sumTime = 0;
-        for(int i = 0; i < 20; i++)
+        for(size_t i = 0; i < sizeof(autoMove) / sizeof(autoMove[0]); i++)
         {
             if(std::get<3>(autoMove[i]) <= 0)
             {

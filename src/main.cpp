@@ -16,6 +16,7 @@ void setup()
     etc[0].setUp(ETC_SERVO_PIN1, 0, 0, 180);
     etc[1].setUp(ETC_SERVO_PIN2, 180, 0, 180);
     back.setUp(BACK_SERVO_PIN, 90, 0, 90);
+    back.setAutoDetach(false);
     lift.setUp(LIFT_SERVO_PIN, 1500, 800);
 }
 
@@ -39,10 +40,10 @@ void loop()
         // 接続が切れたときはモーターを止める
         resetInput();
         drive.stop();
-        etc[0].detach();
-        etc[1].detach();
-        back.detach();
-        lift.move(0);
+        etc[0].stop();
+        etc[1].stop();
+        back.stop();
+        lift.stop();
     }
     else
     {

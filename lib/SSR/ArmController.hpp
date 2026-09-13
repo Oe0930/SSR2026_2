@@ -17,6 +17,7 @@ class ServoController
 
         unsigned long lastUsedTime = 0;
         float lastAngle = -1;
+        bool autoDetach = true;
 
     public:
         bool isAttached = false;
@@ -24,9 +25,11 @@ class ServoController
         void setUp(int pin, int defaultAngle, int _minAngle, int _maxAngle);
         void attach();
         void detach();
+        void setAutoDetach(bool enabled);
 
         void set(float angle);
         void move(float speed);
+        void stop();
 };
 
 class RotationServoController
@@ -49,4 +52,5 @@ class RotationServoController
         void detach();
 
         void move(float speed);
+        void stop();
 };
