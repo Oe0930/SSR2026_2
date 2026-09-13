@@ -14,7 +14,6 @@ class DriveController
         float prePower = 0;
         unsigned long preTime = 0;
         
-        int rGain = 1;
         bool isReverse[3];
         int lastSpeed[3];
         bool lastDirection[3];
