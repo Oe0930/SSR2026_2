@@ -8,11 +8,9 @@ class ServoController
         int pin;
         int minUs = 500;
         int maxUs = 2400;
+        int servoAngle = 0;
         float currentAngle = 0;
         Servo servo;
-
-        int minAngle;
-        int maxAngle;
 
 
         unsigned long lastUsedTime = 0;
@@ -20,6 +18,9 @@ class ServoController
         bool autoDetach = true;
 
     public:
+
+        int minAngle;
+        int maxAngle;
         bool isAttached = false;
         ServoController();
         void setUp(int pin, int defaultAngle, int _minAngle, int _maxAngle);

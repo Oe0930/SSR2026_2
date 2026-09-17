@@ -21,8 +21,8 @@ namespace
     }
 }
 
-const float servoSpeed = 0.1f;
-const float backServoSpeed = 0.03f;
+const float servoSpeed = 0.05f;
+const float backServoSpeed = 0.01f;
 const float liftSpeed = 1;
 
 // ========== main ==========
@@ -67,8 +67,8 @@ void move()
 
         if(isX ^ isY)
         {
-            etc[0].move(servoSpeed * (isX ? 1 : -1));
-            etc[1].move(servoSpeed * (isX ? -1 : 1));
+            etc[0].move(servoSpeed * (isX ? 1 : -1) * power);
+            etc[1].move(servoSpeed * (isX ? -1 : 1) * power);
         }
         else
         {
@@ -78,7 +78,7 @@ void move()
 
         if(isL ^ isR)
         {
-            back.move(backServoSpeed * (isR ? 1 : -1));
+            back.move(backServoSpeed * (isR ? 1 : -1) * power);
         }
         else
         {
@@ -153,7 +153,7 @@ void move()
         }
 
         // 自動制御
-        back.set(0 + 90*(float)passedTime / (float)allTime);
+        back.set(back.minAngle + (back.maxAngle - back.minAngle)*(float)passedTime / (float)allTime);
 
         float maxPower = 0.1f;
         drive.drive(Structs::makeVectorFloat(0.5f, 0.0f), 0.5f, maxPower * std::sin((3.14159f/2.0f) * (float)passedTime / (float)allTime), false);

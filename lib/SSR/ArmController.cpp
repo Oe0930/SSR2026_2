@@ -56,8 +56,12 @@ void ServoController::set(float angle)
         lastAngle = currentAngle;
         lastUsedTime = millis();
         
-        attach();
-        servo.write((int)currentAngle);  
+        if(abs((int)currentAngle - servoAngle) > 3)
+        {
+            attach();
+            servo.write((int)currentAngle); 
+            servoAngle = (int)currentAngle; 
+        }
     }
 }
 

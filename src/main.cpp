@@ -15,8 +15,7 @@ void setup()
 
     etc[0].setUp(ETC_SERVO_PIN1, 0, 0, 180);
     etc[1].setUp(ETC_SERVO_PIN2, 180, 0, 180);
-    back.setUp(BACK_SERVO_PIN, 90, 0, 90);
-    back.setAutoDetach(false);
+    back.setUp(BACK_SERVO_PIN, 110, 15, 110); back.setAutoDetach(false);
     lift.setUp(LIFT_SERVO_PIN, 1500, 800);
 }
 

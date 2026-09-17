@@ -19,7 +19,7 @@ class DriveController
         bool lastDirection[3];
         bool isInitialized[3];
 
-        unsigned long accelTime = 5000;
+        unsigned long accelTime = 30000;
 
     public:
         DriveController();
