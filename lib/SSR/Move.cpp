@@ -22,7 +22,7 @@ namespace
 }
 
 const float servoSpeed = 0.05f;
-const float backServoSpeed = 0.01f;
+const float backServoSpeed = 0.05f;
 const float liftSpeed = 1;
 
 // ========== main ==========
@@ -85,6 +85,11 @@ void move()
             back.move(0);
         }
 
+        if(isLClicked)
+        {  
+            back.detach();
+        }
+
         if(isA ^ isB)
         {
             lift.move(liftSpeed * (isA ? -1 : 1));
@@ -105,17 +110,17 @@ void move()
 
         // 自動制御
         // tuple< 移動ベクトル, 回転量, パワー , 時間 >
-        static const std::tuple<Structs::VectorFloat, float, float, unsigned long> autoMove[] = {
-            std::make_tuple(Structs::makeVectorFloat(0.5f, 1.0f), 0.5f, 1.0f, 1500UL),
-            std::make_tuple(Structs::makeVectorFloat(1.0f, 0.5f), 0.5f, 1.0f, 1750UL),
-            std::make_tuple(Structs::makeVectorFloat(0.5f, 0.0f), 0.5f, 0.6f, 5000UL),
-            std::make_tuple(Structs::makeVectorFloat(1.0f, 0.5f), 0.5f, 1.0f, 2000UL),
-            std::make_tuple(Structs::makeVectorFloat(0.5f, 0.5f), 0.5f, 0.0f, 500UL),
-            std::make_tuple(Structs::makeVectorFloat(0.0f, 0.5f), 0.5f, 1.0f, 2000UL),
-            std::make_tuple(Structs::makeVectorFloat(0.5f, 1.0f), 0.5f, 1.0f, 3400UL),
-            std::make_tuple(Structs::makeVectorFloat(0.0f, 0.5f), 0.5f, 1.0f, 1750UL),
-            std::make_tuple(Structs::makeVectorFloat(0.5f, 0.0f), 0.5f, 1.0f, 1750UL),
-            std::make_tuple(Structs::makeVectorFloat(0.5f, 0.5f), 0.5f, 0.0f, 0UL) // time <= 0 で終了
+        static const std::tuple<Structs::VectorFloat, float, float, unsigned long, unsigned long> autoMove[] = {
+            std::make_tuple(Structs::makeVectorFloat(0.5f, 1.0f), 0.5f, 1.0f, 2500UL, 2000UL),
+            std::make_tuple(Structs::makeVectorFloat(1.0f, 0.5f), 0.5f, 1.0f, 1750UL, 1000UL),
+            std::make_tuple(Structs::makeVectorFloat(0.46f, 0.0f), 0.5f, 0.6f, 5200UL, 1000UL),
+            std::make_tuple(Structs::makeVectorFloat(1.0f, 0.5f), 0.5f, 1.0f, 1700UL, 1000UL),
+            std::make_tuple(Structs::makeVectorFloat(0.5f, 0.5f), 0.5f, 0.0f, 500UL, 1000UL),
+            std::make_tuple(Structs::makeVectorFloat(0.0f, 0.5f), 0.5f, 1.0f, 2000UL, 1000UL),
+            std::make_tuple(Structs::makeVectorFloat(0.5f, 1.0f), 0.5f, 1.0f, 3400UL, 1000UL),
+            std::make_tuple(Structs::makeVectorFloat(0.0f, 0.5f), 0.5f, 1.0f, 1750UL, 1000UL),
+            std::make_tuple(Structs::makeVectorFloat(0.5f, 0.0f), 0.5f, 1.0f, 1750UL, 1000UL),
+            std::make_tuple(Structs::makeVectorFloat(0.5f, 0.5f), 0.5f, 0.0f, 0UL, 1000UL) // time <= 0 で終了
         };
 
         unsigned long _sumTime = 0;
@@ -131,8 +136,9 @@ void move()
             if(_sumTime <= passedTime && passedTime < _sumTime + std::get<3>(autoMove[i]))
             {
                 float power = std::get<2>(autoMove[i]);
-                if (passedTime - _sumTime < 1000) power *= (float)(passedTime - _sumTime) / 1000;
-                if (_sumTime + std::get<3>(autoMove[i]) - passedTime < 1000) power *= (float)(_sumTime + std::get<3>(autoMove[i]) - passedTime)/1000;
+                auto accelTime = std::get<4>(autoMove[i]);
+                if (passedTime - _sumTime < accelTime) power *= (float)(passedTime - _sumTime) / (float)accelTime;
+                if (_sumTime + std::get<3>(autoMove[i]) - passedTime < accelTime) power *= (float)(_sumTime + std::get<3>(autoMove[i]) - passedTime)/(float)accelTime;
                 
                 drive.drive(std::get<0>(autoMove[i]), constrain((std::get<1>(autoMove[i]) + rStick.x)/2, 0, 1), power, false);
                 

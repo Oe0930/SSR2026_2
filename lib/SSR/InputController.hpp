@@ -15,6 +15,7 @@ extern bool isL;
 extern bool isR;
 extern float zL;
 extern float zR;
+extern bool isLClicked;
 extern bool isRClicked;
 extern bool isRClicked_pre;
 extern bool isOpt;
