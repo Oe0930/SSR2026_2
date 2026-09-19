@@ -113,8 +113,8 @@ void move()
         static const std::tuple<Structs::VectorFloat, float, float, unsigned long, unsigned long> autoMove[] = {
             std::make_tuple(Structs::makeVectorFloat(0.5f, 1.0f), 0.5f, 1.0f, 2500UL, 2000UL),
             std::make_tuple(Structs::makeVectorFloat(1.0f, 0.5f), 0.5f, 1.0f, 1750UL, 1000UL),
-            std::make_tuple(Structs::makeVectorFloat(0.46f, 0.0f), 0.5f, 0.6f, 5200UL, 1000UL),
-            std::make_tuple(Structs::makeVectorFloat(1.0f, 0.5f), 0.5f, 1.0f, 1700UL, 1000UL),
+            std::make_tuple(Structs::makeVectorFloat(0.46f, 0.0f), 0.5f, 0.6f, 5400UL, 1000UL),
+            std::make_tuple(Structs::makeVectorFloat(1.0f, 0.5f), 0.5f, 1.0f, 2000UL, 1000UL),
             std::make_tuple(Structs::makeVectorFloat(0.5f, 0.5f), 0.5f, 0.0f, 500UL, 1000UL),
             std::make_tuple(Structs::makeVectorFloat(0.0f, 0.5f), 0.5f, 1.0f, 2000UL, 1000UL),
             std::make_tuple(Structs::makeVectorFloat(0.5f, 1.0f), 0.5f, 1.0f, 3400UL, 1000UL),
