@@ -1,11 +1,43 @@
 #pragma once
 
+#include <vector>
+
 namespace Structs
 {
     struct VectorInt
     {
         int x = 0;
         int y = 0;
+
+        inline VectorInt operator+(const VectorInt& other) const
+        {
+            VectorInt ret;
+            ret.x = x + other.x;
+            ret.y = y + other.y;
+            return ret;
+        }
+
+        inline VectorInt operator-(const VectorInt& other) const
+        {
+            VectorInt ret;
+            ret.x = x - other.x;
+            ret.y = y - other.y;
+            return ret;
+        }
+
+        inline VectorInt& operator+=(const VectorInt& other)
+        {
+            x += other.x;
+            y += other.y;
+            return *this;
+        }
+
+        inline VectorInt& operator-=(const VectorInt& other)
+        {
+            x -= other.x;
+            y -= other.y;
+            return *this;
+        }
     };
 
     struct VectorFloat
@@ -21,6 +53,8 @@ namespace Structs
         ret.y = y;
         return ret;
     }
+
+
 
     inline VectorFloat makeVectorFloat(float x, float y)
     {

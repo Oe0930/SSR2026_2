@@ -2,54 +2,57 @@
 #include "Move.hpp"
 #include "InputController.hpp"
 #include "DebugController.hpp"
+#include "Gesture.hpp"
 
 // セットアップ
-void setup() 
+void setup()
 {
     Serial.begin(115200);
 
     input.connect();
+    gesture.Init(input);
 
-    bool init[] = {false, false, false};
-    drive.setUp(init);
+    pinMode(16, OUTPUT);
 
-    etc[0].setUp(ETC_SERVO_PIN1, 0, 0, 180);
-    etc[1].setUp(ETC_SERVO_PIN2, 180, 0, 180);
-    back.setUp(BACK_SERVO_PIN, 110, 28, 130); back.setAutoDetach(false);
-    lift.setUp(LIFT_SERVO_PIN, 1500, 800);
+    digitalWrite(16, HIGH);
+}
+
+void moveTest()
+{
+    if(gesture.fingerCount() == 0)
+    {
+        int id = gesture.lastGestureId;
+
+        if(id == 0)
+        {
+            digitalWrite(16, HIGH);
+        }
+        else if(id == 1)
+        {
+            digitalWrite(16, LOW);
+        }
+        
+        gesture.lastGestureId = -1;
+    }
 }
 
 void loop()
 {
     static unsigned long lastRemovePairedDevices = 0;
 
-    if (input.isConnected()) 
+    if (input.isConnected())
     {
         Serial.println("Contoroller is Connected!");
 
         while(input.isConnected())
         {
             updateInput();
-            //debug();
-            move();
+            debug();
+            gesture.update();
+
+            moveTest();
         }
 
         Serial.println("Contoroller is Disconnected...");
-
-        // 接続が切れたときはモーターを止める
-        resetInput();
-        drive.stop();
-        etc[0].stop();
-        etc[1].stop();
-        back.stop();
-        lift.stop();
-    }
-    else
-    {
-        if (millis() - lastRemovePairedDevices >= 5000)
-        {
-            input.removePairedDevices();
-            lastRemovePairedDevices = millis();
-        }
     }
 }

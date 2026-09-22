@@ -36,7 +36,7 @@ void IM::removePairedDevices()
 
 void IM::connect()
 {
-    PS4.begin("EC:E3:34:D2:AB:6A");
+    PS4.begin("78:42:1C:2D:3B:AA");
     Serial.println("Waiting for PS4...");
 
     //removePairedDevices();
@@ -172,4 +172,26 @@ bool IM::ps()
 bool IM::option()
 {
     return PS4.Options();
+}
+
+int IM::fingerCount()
+{
+    int cnt = 0;
+    if (PS4.TouchpadTouchActive(0)) cnt++;
+    if (PS4.TouchpadTouchActive(1)) cnt++;
+    return cnt;
+}
+
+Structs::VectorInt IM::TouchpadPosition(int index)
+{
+    if (index < 0 || index >= fingerCount())
+    {
+        return Structs::makeVectorInt(-1, -1);
+    }
+
+    Structs::VectorInt ret;
+    ret.x = PS4.TouchpadX(index);
+    ret.y = PS4.TouchpadY(index);
+
+    return ret;
 }

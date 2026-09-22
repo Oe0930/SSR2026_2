@@ -5,6 +5,9 @@
 #include "DriveController.hpp"
 #include "ArmController.hpp"
 #include "InputController.hpp"
+#include "Gesture.hpp"
+
+extern GestureManager gesture;
 
 extern DriveController drive;
 extern ServoController etc[2];

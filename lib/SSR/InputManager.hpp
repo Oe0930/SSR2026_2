@@ -1,3 +1,5 @@
+#pragma once
+
 #include <Arduino.h>
 #include <PS4Controller.h>
 #include "Structs.hpp"
@@ -46,4 +48,7 @@ class InputManager
         bool rStickClick();
         bool ps();
         bool option();
+
+        int fingerCount();
+        Structs::VectorInt TouchpadPosition(int index);
 };
