@@ -21,4 +21,4 @@ extern int isAuto;
 extern unsigned long autoRunStartTime;
 
 void finishAuto();
-void move();
+void move(bool canAuto);

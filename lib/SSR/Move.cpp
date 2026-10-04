@@ -38,12 +38,12 @@ void finishAuto()
 }
 
 // モーターの制御
-void move()
+void move(bool canAuto)
 {
     if(isAuto == 0)
     {
         // optionボタンで自律制御開始
-        if(isOpt && !isOpt_pre)
+        if(canAuto && isOpt && !isOpt_pre)
         {
             drive.stop();
             stopArmActuators();
@@ -52,7 +52,7 @@ void move()
             return;
         }
 
-        if(isRClicked && !isRClicked_pre)
+        if(canAuto && isRClicked && !isRClicked_pre)
         {
             drive.stop();
             stopArmActuators();
