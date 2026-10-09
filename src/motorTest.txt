@@ -37,4 +37,6 @@ void loop()
     drive.setSpeed(0, isOn ? 100 : -100);
     drive.setSpeed(1, isOn ? 100 : -100);
     drive.setSpeed(2, isOn ? 100 : -100);
+
+    delay(600);
 }

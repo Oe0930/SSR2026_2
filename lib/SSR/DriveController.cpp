@@ -43,7 +43,7 @@ void DriveController::drive(Structs::VectorFloat vec, float turn, float power, b
 {
     vec.x = 2*vec.x - 1;
     vec.y = 2*vec.y - 1;
-    vec.y *= -1;
+    //vec.y *= -1;
     turn = 2*turn - 1;
 
     // 最終的な出力がモーター出力を超えないように入力値を調整する
