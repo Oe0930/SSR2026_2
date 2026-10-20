@@ -12,13 +12,10 @@ void GestureManager::Init(InputManager inputMgr)
     inputManager = inputMgr;
     ClearGestureDirections();
 
+    using gd = GestureManager::GestureDirection;
     Gesture gesture;
     gesture.id = 0;
-    gesture.directions = {GestureManager::GestureDirection::LEFT, GestureManager::GestureDirection::RIGHT};
-    gestures.push_back(gesture);
-    
-    gesture.id = 1;
-    gesture.directions = {GestureManager::GestureDirection::RIGHT, GestureManager::GestureDirection::LEFT};
+    gesture.directions = {gd::RIGHT, gd::LEFT, gd::UP, gd::DOWN, gd::RIGHT, gd::UP, gd::LEFT, gd::DOWN};
     gestures.push_back(gesture);
 }
 

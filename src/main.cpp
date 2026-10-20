@@ -10,6 +10,8 @@ void setup()
 
     input.connect();
 
+    gesture.Init(input);
+
     bool init[] = {false, false, false};
     drive.setUp(init);
 
@@ -30,6 +32,7 @@ void loop()
         while(input.isConnected())
         {
             updateInput();
+            gesture.update();
             //debug();
             move(false);
         }

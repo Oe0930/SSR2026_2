@@ -26,3 +26,4 @@ void loop() {}
 // EC:E3:34:D2:AB:6A // ESP32 Oe
 // 78:42:1c:2d:10:c6 // PS4
 // 78:42:1C:2D:3B:AA // ESP32 Yago
+// 90:74:AE:B3:37:49 // ASUS

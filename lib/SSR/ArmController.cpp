@@ -126,7 +126,7 @@ void RotationServoController::move(float speed)
     {
         if(millis() - lastUsedTime > 3000)
         {
-            detach();
+            //detach();
         }
     }
     else

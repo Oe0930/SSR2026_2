@@ -43,8 +43,9 @@ void move(bool canAuto)
     if(isAuto == 0)
     {
         // optionボタンで自律制御開始
-        if(canAuto && isOpt && !isOpt_pre)
+        if((canAuto && isOpt && !isOpt_pre) || (gesture.fingerCount() == 0 && gesture.lastGestureId == 0))
         {
+            gesture.lastGestureId = -1;
             drive.stop();
             stopArmActuators();
             isAuto = 1;
@@ -62,13 +63,13 @@ void move(bool canAuto)
         }
 
         // LスティックとRスティックで移動しつつ、ZLで減速
-        float power = constrain(((float)1 - zL*slowGainL) * ((float)1 - zR*slowGainR), 0, 1);
-        drive.drive(lStick, rStick.x, power, true);
+        float power = constrain(((float)1 - zL*slowGainL) * ((float)1 - zR*slowGainR), 0, 1.0f);
+        drive.drive(lStick, rStick.x, power/2, true);
 
         if(isX ^ isY)
         {
-            etc[0].move(servoSpeed * (isX ? 1 : -1) * power);
-            etc[1].move(servoSpeed * (isX ? -1 : 1) * power);
+            etc[0].move(servoSpeed * (isX ? -1 : 1) * power);
+            etc[1].move(servoSpeed * (isX ? 1 : -1) * power);
         }
         else
         {

@@ -36,7 +36,7 @@ void IM::removePairedDevices()
 
 void IM::connect()
 {
-    PS4.begin("78:42:1C:2D:3B:AA");
+    PS4.begin("90:74:AE:B3:37:49");
     Serial.println("Waiting for PS4...");
 
     //removePairedDevices();
